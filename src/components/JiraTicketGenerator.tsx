@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,11 +5,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { generateWithOpenAI } from "@/services/openaiService";
-import { FileText, Copy, Download } from "lucide-react";
+import { FileText, Copy, Download, Check, X } from "lucide-react";
 
 const JiraTicketGenerator = () => {
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [generatedTicket, setGeneratedTicket] = React.useState('');
+  const [isApproved, setIsApproved] = React.useState(false);
   const [formData, setFormData] = React.useState({
     ticketType: 'User Story',
     title: '',
@@ -46,6 +46,10 @@ const JiraTicketGenerator = () => {
       ...prev,
       [field]: value
     }));
+    // Reset approval when form changes
+    if (isApproved) {
+      setIsApproved(false);
+    }
   };
 
   const generateTicket = async () => {
@@ -59,6 +63,7 @@ const JiraTicketGenerator = () => {
     }
 
     setIsGenerating(true);
+    setIsApproved(false);
 
     try {
       const prompt = `Create a professional Jira ticket with the following details:
@@ -84,7 +89,7 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
       
       toast({
         title: "Ticket Generated!",
-        description: "Your Jira ticket has been created successfully."
+        description: "Please review the ticket content and approve it to enable export options."
       });
     } catch (error) {
       console.error('Error generating ticket:', error);
@@ -98,7 +103,24 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
     }
   };
 
+  const approveTicket = () => {
+    setIsApproved(true);
+    toast({
+      title: "Ticket Approved!",
+      description: "You can now copy or download the ticket."
+    });
+  };
+
+  const rejectTicket = () => {
+    toast({
+      title: "Ticket Rejected",
+      description: "Please modify the form and generate a new ticket."
+    });
+  };
+
   const copyToClipboard = async () => {
+    if (!isApproved) return;
+    
     try {
       await navigator.clipboard.writeText(generatedTicket);
       toast({
@@ -115,6 +137,8 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
   };
 
   const downloadTicket = () => {
+    if (!isApproved) return;
+    
     const blob = new Blob([generatedTicket], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -143,6 +167,7 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
       customInstructions: ''
     });
     setGeneratedTicket('');
+    setIsApproved(false);
   };
 
   return (
@@ -267,7 +292,7 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
                 className="toolbox-btn-primary flex-1"
               >
                 <FileText className="w-4 h-4 mr-2" />
-                {isGenerating ? 'Generating...' : 'Generate Ticket'}
+                {isGenerating ? 'Generating...' : 'Generate Preview'}
               </Button>
               
               <Button 
@@ -283,9 +308,9 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
 
         <Card>
           <CardHeader>
-            <CardTitle>Generated Ticket</CardTitle>
+            <CardTitle>Generated Ticket Preview</CardTitle>
             <CardDescription>
-              Your professional Jira ticket will appear here
+              Review your ticket before creating it
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -297,30 +322,60 @@ Please format this as a complete Jira ticket with proper structure, acceptance c
                   </pre>
                 </div>
                 
-                <div className="flex gap-2">
-                  <Button 
-                    onClick={copyToClipboard}
-                    variant="outline"
-                    className="toolbox-btn-outline flex-1"
-                  >
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copy
-                  </Button>
-                  
-                  <Button 
-                    onClick={downloadTicket}
-                    variant="outline"
-                    className="toolbox-btn-outline flex-1"
-                  >
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
+                {!isApproved ? (
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={approveTicket}
+                      className="toolbox-btn-primary flex-1"
+                    >
+                      <Check className="w-4 h-4 mr-2" />
+                      Approve & Create Ticket
+                    </Button>
+                    
+                    <Button 
+                      onClick={rejectTicket}
+                      variant="outline"
+                      className="toolbox-btn-outline flex-1"
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      Reject
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <div className="flex items-center text-green-800">
+                        <Check className="w-4 h-4 mr-2" />
+                        <span className="text-sm font-medium">Ticket Approved - Ready to Create</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={copyToClipboard}
+                        variant="outline"
+                        className="toolbox-btn-outline flex-1"
+                      >
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copy Ticket
+                      </Button>
+                      
+                      <Button 
+                        onClick={downloadTicket}
+                        variant="outline"
+                        className="toolbox-btn-outline flex-1"
+                      >
+                        <Download className="w-4 h-4 mr-2" />
+                        Download Ticket
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Fill out the form and click "Generate Ticket" to create your Jira ticket</p>
+                <p>Fill out the form and click "Generate Preview" to create your Jira ticket preview</p>
               </div>
             )}
           </CardContent>
