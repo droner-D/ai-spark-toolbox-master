@@ -1,4 +1,3 @@
-
 interface OpenAIRequest {
   prompt: string;
   context?: string;
@@ -50,6 +49,87 @@ What's your experience with AI implementation? Have you found the secret sauce t
 #AITransformation #BusinessInnovation #DigitalProductivity`);
       } else if (prompt.includes('comment')) {
         resolve(`Great insights in this post! The point about human-AI collaboration resonates strongly with our experience. We've found that the most successful implementations are those that enhance human capabilities rather than attempting to replace them. I'd be interested to hear more about how you measured the improvement in "meaningful work engagement" - that's a metric we've been trying to quantify as well.`);
+      } else if (prompt.includes('meeting agenda')) {
+        resolve(`# Weekly Product Strategy Meeting
+
+**Date:** [Meeting Date]
+**Time:** [Meeting Time]
+**Duration:** 60 minutes
+**Location:** Conference Room A / Zoom Link
+
+## Agenda
+
+### 1. Opening & Welcome (5 minutes)
+- Quick check-in with all attendees
+- Review of meeting objectives
+
+### 2. Product Roadmap Review (20 minutes)
+- Q4 milestone progress update
+- Key feature development status
+- Blockers and dependencies discussion
+
+### 3. Market Research Insights (15 minutes)
+- Latest user feedback analysis
+- Competitor landscape updates
+- Feature request prioritization
+
+### 4. Technical Architecture Discussion (15 minutes)
+- System scalability considerations
+- Infrastructure optimization opportunities
+- Security and compliance updates
+
+### 5. Action Items & Next Steps (5 minutes)
+- Assignment of follow-up tasks
+- Next meeting scheduling
+- Key decisions summary
+
+## Pre-Meeting Preparation
+- Review last week's action items
+- Prepare individual progress reports
+- Come with specific questions or concerns
+
+## Expected Outcomes
+- Clear understanding of current project status
+- Aligned priorities for the upcoming week
+- Defined action items with ownership`);
+      } else if (prompt.includes('meeting description')) {
+        resolve(`**Meeting: Weekly Product Strategy Sync**
+
+Join us for our weekly strategic alignment session where we'll review progress, discuss challenges, and plan ahead for the upcoming sprint.
+
+**What we'll cover:**
+• Current product roadmap status and milestones
+• User feedback insights and market research updates
+• Technical considerations and architectural decisions
+• Priority setting for the next development cycle
+
+**Who should attend:**
+Product managers, engineering leads, UX designers, and key stakeholders involved in product development decisions.
+
+**Preparation:**
+Please review the previous week's action items and come prepared to discuss your team's progress and any blockers you're facing.
+
+This meeting is essential for maintaining our team alignment and ensuring we're building the right features at the right time. Your active participation helps drive our product success.`);
+      } else if (prompt.includes('slack') || prompt.includes('Slack')) {
+        resolve(`🚀 **Team Update: New Feature Launch**
+
+Hey team! 👋
+
+Quick update on our latest product release - the AI-powered content generator is now live in production! 
+
+**Key highlights:**
+✅ Successfully deployed to all environments
+✅ Initial user feedback is very positive (4.8/5 rating)
+✅ No critical issues reported in the first 24 hours
+
+**What's next:**
+• Monitor usage metrics over the next week
+• Collect detailed user feedback through our in-app survey
+• Prepare for the next iteration based on learnings
+
+Thanks to everyone who made this launch possible! Special shoutout to the dev team for the smooth deployment 🎉
+
+Questions or concerns? Drop them in the thread below 👇`);
       } else if (prompt.includes('jira') || prompt.includes('ticket')) {
         resolve(`# User Story
 

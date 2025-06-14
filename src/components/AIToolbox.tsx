@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import YouTubeSummary from './YouTubeSummary';
 import SocialMediaGenerator from './SocialMediaGenerator';
 import CommentGenerator from './CommentGenerator';
+import CommunicationGenerator from './CommunicationGenerator';
 import JiraTicketGenerator from './JiraTicketGenerator';
 
 const AIToolbox = () => {
@@ -17,6 +18,8 @@ const AIToolbox = () => {
         return <SocialMediaGenerator />;
       case 'comments':
         return <CommentGenerator />;
+      case 'communication':
+        return <CommunicationGenerator />;
       case 'jira-tickets':
         return <JiraTicketGenerator />;
       default:

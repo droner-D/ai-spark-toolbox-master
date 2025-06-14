@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { 
@@ -6,6 +5,7 @@ import {
   Share2, 
   MessageCircle, 
   ClipboardList,
+  MessageSquare,
   Menu,
   X
 } from 'lucide-react';
@@ -37,6 +37,12 @@ const Sidebar = ({ activeTool, setActiveTool }: SidebarProps) => {
       name: 'Comment Generator',
       icon: MessageCircle,
       description: 'AI-powered comments for social media'
+    },
+    {
+      id: 'communication',
+      name: 'Communication Generator',
+      icon: MessageSquare,
+      description: 'Meeting agendas, descriptions & Slack messages'
     },
     {
       id: 'jira-tickets',
